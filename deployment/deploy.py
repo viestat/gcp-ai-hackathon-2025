@@ -38,15 +38,18 @@ def deploy_agent():
         agent_config = {
             "display_name": "AI Tutor MVP",
             "description": "Personalized AI tutor for adaptive learning",
-            "model": "gemini-2.0-flash-exp",
+            "model": "gemini-2.5-flash",
             "tools": [
-                "GoogleSearchTool",
-                "AssessmentAgentTool",
-                "ResearchAgentTool",
-                "RoadmapAgentTool",
-                "ContentGenerationAgentTool",
-                "EvaluationAgentTool",
-                "AdaptationAgentTool",
+                "conduct_adaptive_interview",
+                "assess_user_profile",
+                "research_topic",
+                "create_learning_roadmap",
+                "generate_learning_content",
+                "evaluate_knowledge",
+                "adapt_roadmap",
+                "save_user_progress",
+                "load_user_progress",
+                "track_learning_analytics",
             ],
         }
 

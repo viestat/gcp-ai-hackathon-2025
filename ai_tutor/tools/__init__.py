@@ -1,26 +1,53 @@
 """Tools module for the AI Tutor agent."""
 
-from .tutor_tools import (
+# Assessment tools
+from .assessment import (
     conduct_adaptive_interview,
     assess_user_profile,
+)
+
+# Research tools
+from .research import (
     research_topic,
+)
+
+# Roadmap tools
+from .roadmap import (
     create_learning_roadmap,
-    generate_learning_content,
-    evaluate_knowledge,
     adapt_roadmap,
+)
+
+# Content generation tools
+from .content import (
+    generate_learning_content,
+)
+
+# Evaluation tools
+from .evaluation import (
+    evaluate_knowledge,
+)
+
+# Persistence tools
+from .persistence import (
     save_user_progress,
     load_user_progress,
     track_learning_analytics,
 )
 
 __all__ = [
+    # Assessment
     "conduct_adaptive_interview",
     "assess_user_profile",
+    # Research
     "research_topic",
+    # Roadmap
     "create_learning_roadmap",
-    "generate_learning_content",
-    "evaluate_knowledge",
     "adapt_roadmap",
+    # Content
+    "generate_learning_content",
+    # Evaluation
+    "evaluate_knowledge",
+    # Persistence
     "save_user_progress",
     "load_user_progress",
     "track_learning_analytics",

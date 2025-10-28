@@ -4,10 +4,11 @@ Content Generation Tools for AI Tutor
 Handles generation of multimedia learning content based on user preferences.
 """
 
+from typing import Dict, Any
 from google.adk.tools import ToolContext
 
 
-def generate_learning_content(
+async def generate_learning_content(
     content_type: str,
     topic: str,
     level: str,
@@ -39,37 +40,48 @@ def generate_learning_content(
             }
 
         elif content_type == "image":
-            # Use Gemini Vision to generate educational images
-            image_prompt = f"Create an educational diagram explaining {topic} concepts at {level} level, suitable for {learning_style} learners"
-            image_result = tool_context.generate_image(image_prompt)
-            generated_content = {
-                "text": f"Visual explanation of {topic} concepts",
-                "image_url": image_result.get("url", ""),
-                "video_url": None,
-                "audio_url": None,
-            }
+            # Use the enhanced image generation tool
+            from .image_generation import generate_educational_image
+
+            image_result = await generate_educational_image(
+                topic=topic,
+                level=level,
+                learning_style=learning_style,
+                specific_concept=None,
+                tool_context=tool_context,
+            )
+            # Handle image generation
+            if image_result.get("status") == "success":
+                generated_content = {
+                    "text": f"Visual explanation of {topic} concepts - {image_result.get('message', 'Image generated')}",
+                    "image_artifact": image_result.get("artifact_name", ""),
+                    "video_url": None,
+                    "audio_url": None,
+                }
+            else:
+                generated_content = {
+                    "text": f"Visual explanation of {topic} concepts - Image generation failed: {image_result.get('message', 'unknown error')}",
+                    "image_artifact": "",
+                    "video_url": None,
+                    "audio_url": None,
+                }
 
         elif content_type == "audio":
             # Generate audio content using text-to-speech
             audio_text = f"Welcome to this {level} level lesson on {topic}. This content is designed for {learning_style} learners."
-            audio_result = tool_context.text_to_speech(audio_text)
             generated_content = {
                 "text": audio_text,
                 "image_url": None,
                 "video_url": None,
-                "audio_url": audio_result.get("url", ""),
+                "audio_url": None,  # Placeholder for actual TTS
             }
 
         elif content_type == "video":
             # Generate video content (placeholder for now)
-            video_prompt = (
-                f"Create a short educational video about {topic} for {level} learners"
-            )
-            video_result = tool_context.generate_video(video_prompt)
             generated_content = {
                 "text": f"Video lesson on {topic}",
                 "image_url": None,
-                "video_url": video_result.get("url", ""),
+                "video_url": None,  # Placeholder for actual video generation
                 "audio_url": None,
             }
 

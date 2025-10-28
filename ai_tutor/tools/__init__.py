@@ -22,6 +22,11 @@ from .content import (
     generate_learning_content,
 )
 
+# Image generation tools
+from .image_generation import (
+    generate_educational_image,
+)
+
 # Evaluation tools
 from .evaluation import (
     evaluate_knowledge,
@@ -45,6 +50,8 @@ __all__ = [
     "adapt_roadmap",
     # Content
     "generate_learning_content",
+    # Image Generation
+    "generate_educational_image",
     # Evaluation
     "evaluate_knowledge",
     # Persistence

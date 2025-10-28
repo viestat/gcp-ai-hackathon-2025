@@ -85,6 +85,16 @@ class WebSocketToQueueAdapter:
         self.remote_config = remote_config
         self.input_queue: asyncio.Queue[dict] = asyncio.Queue()
         self.first_message = True
+        self.connection_closed = False
+
+    async def _safe_send_json(self, data: dict) -> None:
+        """Safely send JSON data through WebSocket, handling closed connections."""
+        if not self.connection_closed:
+            try:
+                await self.websocket.send_json(data)
+            except Exception as e:
+                logging.debug(f"Failed to send message (connection likely closed): {e}")
+                self.connection_closed = True
 
     def _transform_remote_agent_engine_response(self, response: dict) -> dict:
         """Transform remote Agent Engine bidiStreamOutput to ADK Event format for frontend."""
@@ -138,13 +148,15 @@ class WebSocketToQueueAdapter:
                     )
 
             except ConnectionClosedError as e:
-                logging.warning(f"Client closed connection: {e}")
+                logging.debug(f"Client closed connection: {e}")
+                self.connection_closed = True
                 break
             except json.JSONDecodeError as e:
                 logging.error(f"Error parsing JSON from client: {e}")
                 break
             except Exception as e:
                 logging.error(f"Error receiving from client: {e!s}")
+                self.connection_closed = True
                 break
 
     async def run_agent_engine(self) -> None:
@@ -157,14 +169,14 @@ class WebSocketToQueueAdapter:
 
                 # Send setupComplete after initialization delay
                 setup_complete_response: dict = {"setupComplete": {}}
-                await self.websocket.send_json(setup_complete_response)
+                await self._safe_send_json(setup_complete_response)
 
                 async for response in self.agent_engine.bidi_stream_query(
                     self.input_queue
                 ):
                     # Send responses from agent engine to the websocket client
                     if response is not None:
-                        await self.websocket.send_json(response)
+                        await self._safe_send_json(response)
 
                         # Check for error responses
                         if isinstance(response, dict) and "error" in response:
@@ -183,7 +195,7 @@ class WebSocketToQueueAdapter:
                 )
         except Exception as e:
             logging.error(f"Error in agent engine: {e}")
-            await self.websocket.send_json({"error": str(e)})
+            await self._safe_send_json({"error": str(e)})
 
     async def run_remote_agent_engine(
         self, project_id: str, location: str, remote_agent_engine_id: str
@@ -201,11 +213,11 @@ class WebSocketToQueueAdapter:
             # Send setupComplete only after remote connection is established
             logging.debug("Remote agent engine connected")
             setup_complete_response: dict = {"setupComplete": {}}
-            await self.websocket.send_json(setup_complete_response)
+            await self._safe_send_json(setup_complete_response)
 
             # Create task to forward messages from queue to remote session
             async def forward_to_remote() -> None:
-                while True:
+                while not self.connection_closed:
                     try:
                         message = await self.input_queue.get()
                         await session.send(message)
@@ -215,7 +227,7 @@ class WebSocketToQueueAdapter:
 
             # Create task to receive from remote and send to websocket
             async def receive_from_remote() -> None:
-                while True:
+                while not self.connection_closed:
                     try:
                         response = await session.receive()
                         if response is not None:
@@ -224,7 +236,7 @@ class WebSocketToQueueAdapter:
                                 response
                             )
                             if transformed:
-                                await self.websocket.send_json(transformed)
+                                await self._safe_send_json(transformed)
 
                             # Check for error responses
                             if isinstance(response, dict) and "error" in response:

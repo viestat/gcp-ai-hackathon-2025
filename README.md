@@ -130,6 +130,9 @@ This MVP combines patterns from:
 ## Running the Agent
 
 ```bash
+# Remote Agent with full multimodal interface (voice, video, text, images)
+make playground-remote
+
 # Local development with full multimodal interface (voice, video, text, images)
 make playground
 
@@ -139,6 +142,16 @@ make local-backend
 # Deploy to Google Cloud
 make backend
 ```
+
+### Deployed Agent Engine Endpoints
+
+If you've deployed the agent to Vertex AI Agent Engine, you can use these endpoints:
+
+- **Query (HTTP)**: `https://us-central1-aiplatform.googleapis.com/v1/projects/qwiklabs-gcp-02-db768a07ab84/locations/us-central1/reasoningEngines/4797024096451821568:query`
+- **Streaming (SSE)**: `https://us-central1-aiplatform.googleapis.com/v1/projects/qwiklabs-gcp-02-db768a07ab84/locations/us-central1/reasoningEngines/4797024096451821568:streamQuery?alt=sse`
+- **Console (Metrics & Logs)**: `https://console.cloud.google.com/vertex-ai/agents/locations/us-central1/agent-engines/4797024096451821568/metrics?authuser=2&project=qwiklabs-gcp-02-db768a07ab84`
+
+Use these in your client or tooling to send requests to the deployed agent.
 
 ### Multimodal Interface Features
 

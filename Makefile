@@ -60,7 +60,7 @@ playground-remote: build-frontend-if-needed
 	@echo "| 🌐 Access your app at: http://localhost:8000                               |"
 	@echo "| ☁️  Connected to deployed agent engine                                      |"
 	@echo "==============================================================================="
-	uv run python -m app.utils.expose_app --mode remote
+	uv run python -m ai_tutor.utils.expose_app --mode remote
 
 # Start the frontend UI separately for development (requires backend running separately)
 ui:

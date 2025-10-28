@@ -1,9 +1,9 @@
-# Adaptive AI Tutor - Personalized Learning Agent
+# Adaptive AI Tutor - Personalized Learning Agent with Multimodal Capabilities
 
 ## Concept
 
-A personalized AI tutor that builds, guides, and continuously adapts a learning roadmap for any topic - powered by autonomous, multimodal AI agents.
-It doesn't just teach - it learns how you learn, dynamically adjusting its methods, pace, and content format to optimize understanding.
+A personalized AI tutor that builds, guides, and continuously adapts a learning roadmap for any topic - powered by autonomous, multimodal AI agents with voice, video, and image interaction capabilities.
+It doesn't just teach - it learns how you learn, dynamically adjusting its methods, pace, and content format to optimize understanding through multiple modalities.
 
 This is an MVP implementation that creates adaptive learning experiences through intelligent assessment, dynamic content generation, and multimedia learning support.
 
@@ -67,12 +67,13 @@ The AI Tutor uses a multi-agent system with the following components:
 
 ## Key Features
 
-- **Multimedia Learning**: Text, images, audio, and video support
-- **Adaptive Assessment**: Various evaluation methods (quizzes, multimedia)
-- **Real-time Adaptation**: Dynamic roadmap adjustment
-- **Personalized Content**: Generated based on learning style and level
+- **Multimodal Learning**: Voice, video, text, and image support for comprehensive learning
+- **Real-time Voice Interaction**: Natural conversation through Gemini Live API
+- **Adaptive Assessment**: Various evaluation methods (quizzes, multimedia, voice responses)
+- **Real-time Adaptation**: Dynamic roadmap adjustment based on multimodal feedback
+- **Personalized Content**: Generated based on learning style and level across all modalities
 - **Progress Tracking**: Analytics and performance monitoring
-- **Truly multimodal**: teaches and evaluates using any medium - not just text
+- **Truly multimodal**: teaches and evaluates using any medium - voice, video, images, and text
 - **Autonomous & adaptive**: it continually learns from user performance and feedback
 - **Scalable & general-purpose**: can be applied to any topic - from art history to quantum computing
 - **Personal mentor experience**: blends reasoning, generative content, and dynamic pacing like a real human tutor
@@ -99,14 +100,15 @@ This MVP combines patterns from:
 
    - Python 3.10+
    - uv for dependency management
+   - Node.js 18+ (for frontend)
    - Google Cloud Project with Vertex AI enabled
 
 2. **Installation**
 
    ```bash
-   git clone https://github.com/google/adk-samples.git
-   cd adk-samples/python/agents/ai-tutor-mvp
-   uv sync
+   git clone <your-repo>
+   cd gcp-ai-hackathon-2025
+   make install
    ```
 
 3. **Configuration**
@@ -119,11 +121,14 @@ This MVP combines patterns from:
 ## Running the Agent
 
 ```bash
-# CLI mode
-adk run ai_tutor
+# Local development with multimodal interface
+make playground
 
-# Web interface
-adk web
+# Local backend only
+make local-backend
+
+# Deploy to Google Cloud
+make backend
 ```
 
 ## Example Interaction

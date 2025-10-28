@@ -2,10 +2,14 @@
 # Installation & Setup
 # ==============================================================================
 
-# Install dependencies using uv package manager
+# Install dependencies using uv package manager.
+# For Windows, please ensure 'uv' is installed and in your PATH.
+# You can install it using PowerShell:
+#   irm https://astral.sh/uv/install.ps1 | iex
 install:
-	@command -v uv >/dev/null 2>&1 || { echo "uv is not installed. Installing uv..."; curl -LsSf https://astral.sh/uv/0.8.13/install.sh | sh; source $HOME/.local/bin/env; }
+	@echo "Installing backend and frontend dependencies..."
 	uv sync --dev && (cd frontend && npm install)
+	@echo "Installation complete."
 
 # ==============================================================================
 # Playground Targets
@@ -40,17 +44,9 @@ build-frontend:
 	(cd frontend && npm run build)
 
 # Build the frontend only if needed (conditional build)
+# This target uses a Python script for cross-platform compatibility.
 build-frontend-if-needed:
-	@if [ ! -d "frontend/build" ] || [ ! -f "frontend/build/index.html" ]; then \
-		echo "Frontend build directory not found or incomplete. Building..."; \
-		$(MAKE) build-frontend; \
-	elif [ "frontend/package.json" -nt "frontend/build/index.html" ] || \
-		 find frontend/src -newer frontend/build/index.html 2>/dev/null | head -1 | grep -q .; then \
-		echo "Frontend source files are newer than build. Rebuilding..."; \
-		$(MAKE) build-frontend; \
-	else \
-		echo "Frontend build is up to date. Skipping build..."; \
-	fi
+	@python scripts/check_frontend_build.py && $(MAKE) build-frontend || echo "Frontend build is up to date. Skipping build."
 
 # Connect to remote deployed agent
 playground-remote: build-frontend-if-needed

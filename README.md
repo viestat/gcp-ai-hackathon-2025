@@ -1,5 +1,9 @@
 # Adaptive AI Tutor - Personalized Learning Agent with Multimodal Capabilities
 
+<div align="center">
+  <img src="assets/logo.png" alt="AI Agent Tutor Logo" width="400">
+</div>
+
 ## Concept
 
 A personalized AI tutor that builds, guides, and continuously adapts a learning roadmap for any topic - powered by autonomous, multimodal AI agents with voice, video, and image interaction capabilities.
